@@ -44,7 +44,7 @@ library(dplyr)
 library(vcd) # Phi coeffs
 library(ggplot2)
 
-data_raw <- read.csv("/Users/tamasbarczikay/Desktop/Innio/data.csv")
+data_raw <- read.csv("/Users/tamasbarczikay/R_projects/R-project-2/data.csv")
 
 # Check dimensions of the dataset - 316x15 df
 print(dim(data_raw))
@@ -62,10 +62,9 @@ print(colSums(is.na(data_raw) | data_raw == ""))
 # Check whether the  two missing values are coming from the same rows
 data_raw %>% filter(is.na(pist_m)) %>% print()
 
-# They do, so I exclude them from the analysis + I take out op_set_2
+# They do, so I exclude them from the analysis
 data_clean <- data_raw %>%
-  filter(is.na(pist_m) == FALSE) %>%
-  select(-op_set_2)
+  filter(is.na(pist_m) == FALSE)
 
 # Works like charm!
 print(colSums(is.na(data_clean) | data_clean == ""))
@@ -92,7 +91,6 @@ print(unique(data_raw$oph))
 # Excluding this observation
 data_clean <- data_raw %>%
   filter(is.na(pist_m) == FALSE) %>%
-  select(-op_set_2) %>%
   filter(oph != 1000000000)
 
 # 2) issue_type should be turned into a factor
@@ -104,7 +102,6 @@ data_clean <- data_raw %>%
 
 data_clean <- data_raw %>%
   filter(!is.na(pist_m)) %>%
-  select(-op_set_2) %>%
   filter(oph != 1000000000) %>%
   mutate(issue_type = as.factor(issue_type))
 
@@ -118,7 +115,6 @@ str(data_clean)
 
 data_clean <- data_raw %>%
   filter(!is.na(pist_m)) %>%
-  select(-op_set_2) %>%
   filter(oph != 1000000000) %>%
   mutate(
     issue_type = as.factor(issue_type),
@@ -132,15 +128,13 @@ str(data_clean)
 # 4) op_set_1 and op_set_3 have no variation + op_set_2 from before
 data_clean <- data_raw %>%
   filter(!is.na(pist_m)) %>%
-  select(-op_set_2) %>%
   filter(oph != 1000000000) %>%
   mutate(
     issue_type = as.factor(issue_type),
     resting_analysis_results = factor(resting_analysis_results, 
                                       levels = c(0, 1, 2),
                                       labels = c("normal", "abnormal", "critical"))
-  ) %>%
-  select(-op_set_1, -op_set_3)
+  )
 
 str(data_clean)
 

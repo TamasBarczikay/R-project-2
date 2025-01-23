@@ -5,20 +5,18 @@ library(vcd) # Phi coeffs
 library(MASS)  # for the different phi function
 
 # Read in data
-data <- read.csv("/Users/tamasbarczikay/Desktop/Innio/data.csv")
+data <- read.csv("/Users/tamasbarczikay/R_projects/R-project-2/data.csv")
 
 # Clean data
 data <- data %>%
   filter(!is.na(pist_m)) %>%
-  select(-op_set_2) %>%
   filter(oph != 1000000000) %>%
   mutate(
     issue_type = as.factor(issue_type),
     resting_analysis_results = factor(resting_analysis_results, 
                                       levels = c(0, 1, 2),
                                       labels = c("normal", "abnormal", "critical"))
-  ) %>%
-  select(-op_set_1, -op_set_3)
+  )
 
 ################################################################################
 # Baseline stats
